@@ -7,8 +7,11 @@ const Body = Matter.Body;
 var engine, world, ground;
 var backgroundimg;
 var tower, towerimg;
+var canhao, angulo;
+var barco;
 
 
+var vetorBolas =[];
 function preload() {
   backgroundimg = loadImage("./assets/background.gif");
   towerimg = loadImage("./assets/tower.png");
@@ -31,6 +34,16 @@ function setup() {
 
   ground= Bodies.rectangle(0,height-1, width*2,1,options);
   World.add(world,ground);
+
+  angleMode(DEGREES)
+  angulo = 20
+
+  canhao= new Cannon(180,110,130,100,angulo);
+
+  barco = new Boat(width - 79, height - 60, 170, 170, -80);
+
+  
+  
  
 }
 
@@ -46,5 +59,35 @@ function draw() {
   imageMode(CENTER);
   image(towerimg,tower.position.x, tower.position.y, 160,310);
   pop();
+
+  for (var i=0; i<vetorBolas.length; i++){
+    cannonBallShow(vetorBolas[i], i);
+  }
+
+  canhao.show();
+  
+  Body.setVelocity(barco.body,{x: -1, y: 0});
+  barco.show();
+  
   
 }
+function keyReleased(){
+  if(keyCode===DOWN_ARROW){
+    vetorBolas[vetorBolas.length-1].shoot();
+  }
+}
+
+function keyPressed(){
+  if(keyCode===DOWN_ARROW){
+    var bolaDeCanhao;
+    bolaDeCanhao= new CannonBall(canhao.x+5, canhao.y+2);
+    vetorBolas.push(bolaDeCanhao);
+  }
+}
+
+function cannonBallShow(bola,indice){
+  if(bola){
+    bola.show();
+  }
+
+} 
